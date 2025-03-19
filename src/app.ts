@@ -61,12 +61,12 @@ app.use(express.urlencoded({ extended: true, limit: "180kb" }));
 app.use(cookieParser());
 
 app.use(
-  expressSession({
-    secret: process.env.ACCESS_TOKEN_SECRET || "secret", // Add a secret key here
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false }, // set to true if using HTTPS
-  })
+    expressSession({
+        secret: process.env.ACCESS_TOKEN_SECRET || "secret", // Add a secret key here
+        resave: false,
+        saveUninitialized: false,
+        cookie: { secure: false }, // set to true if using HTTPS
+    })
 );
 
 // app.use(passport.initialize());
@@ -76,7 +76,7 @@ app.use(
 app.use("/", express.static(path.join(__dirname, "..", "public")));
 
 app.get("^/$|/index(.html)?", (req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, "..", "views", "index.html"));
+    res.sendFile(path.join(__dirname, "..", "views", "index.html"));
 });
 
 // passport.use(
@@ -184,14 +184,14 @@ app.get("^/$|/index(.html)?", (req: Request, res: Response) => {
 // app.use(errorHandler);
 
 app.all("*", (req: Request, res: Response) => {
-  res.status(404);
-  if (req.accepts("html")) {
-    res.sendFile(path.join(__dirname, "..", "views", "404.html"));
-  } else if (req.accepts("json")) {
-    res.json({ message: "404 Not Found" });
-  } else {
-    res.type("txt").send("404 Not Found");
-  }
+    res.status(404);
+    if (req.accepts("html")) {
+        res.sendFile(path.join(__dirname, "..", "views", "404.html"));
+    } else if (req.accepts("json")) {
+        res.json({ message: "404 Not Found" });
+    } else {
+        res.type("txt").send("404 Not Found");
+    }
 });
 
 export default app;
