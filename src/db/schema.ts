@@ -1,34 +1,21 @@
 import {
   pgTable,
-  uuid,
+  serial,
   text,
+  boolean,
   timestamp,
   varchar,
-  vector,
-  boolean,
 } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
 
-// export const tenantsTable = pgTable("tenants", {
-//   id: uuid()
-//     .default(sql`public.uuid_generate_v4()`)
-//     .primaryKey()
-//     .notNull(),
-//   name: text(),
-//   created: timestamp({ mode: "string" })
-//     .default(sql`LOCALTIMESTAMP`)
-//     .notNull(),
-//   updated: timestamp({ mode: "string" })
-//     .default(sql`LOCALTIMESTAMP`)
-//     .notNull(),
-//   deleted: timestamp({ mode: "string" }),
-// });
-
-export const todos = pgTable("todos", {
-  id: uuid().defaultRandom(),
-  tenantId: uuid("tenant_id"),
-  title: varchar({ length: 256 }),
-  estimate: varchar({ length: 256 }),
-  embedding: vector({ dimensions: 3 }),
-  complete: boolean(),
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  password: text("password").notNull(),
+  phone: varchar("phone", { length: 15 }).notNull(),
+  profileImage: text("profile_image"),
+  isAdmin: boolean("is_admin").default(false),
+  disabled: boolean("disabled").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
