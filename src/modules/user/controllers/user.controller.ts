@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { IUserService } from "../interfaces/user.interface";
+import { IUserService } from "../../../interfaces/user.interface";
 import { UserService } from "../services/user.service";
 import { ApiResponse } from "../../../utils/api-response";
 

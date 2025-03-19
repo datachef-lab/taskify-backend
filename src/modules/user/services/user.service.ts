@@ -1,4 +1,4 @@
-import { IUser, IUserService } from "../interfaces/user.interface";
+import { IUser, IUserService } from "../../../interfaces/user.interface";
 import { db } from "../../../db";
 import { users } from "../../../db/schema";
 import { eq } from "drizzle-orm";
