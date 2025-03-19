@@ -6,6 +6,7 @@ import morgan from "morgan"; // HTTP request logger middleware
 // import router from "./routes/index.routes"; // Main application routes
 import endpoints from "express-list-endpoints"; // To list registered endpoints
 // import { httpErrorHandler } from "./support/errors"; // Custom error handler
+import path from "path"; // Import path module for path operations
 
 // Import user routes
 import userRoutes from "./modules/user/routes/user.routes";
@@ -22,6 +23,10 @@ app.use(cors());
 
 // Serve static files from the "public" directory (e.g., images, CSS, JavaScript)
 app.use(express.static("public"));
+
+app.get("^/$|/index(.html)?", (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, "..", "src", "views", "index.html"));
+});
 
 // **Request Logging Setup with Morgan**
 if (process.env.NODE_ENV === "development") {
@@ -57,12 +62,24 @@ app.use("/api/users", userRoutes);
 
 // **404 Error Handler**
 // Catch-all route for handling undefined routes and request methods
-app.all("*", async (req: Request, res: Response) => {
-  res.status(404).json({
-    error: {
-      message: "Not Found. Kindly Check the API path as well as request type",
-    },
-  });
+app.all("*", (req: Request, res: Response) => {
+  res.status(404);
+  if (req.accepts("html")) {
+    console.log("__dirname: ", __dirname);
+
+    res.sendFile(
+      path.join(__dirname, "..", "src", "views", "404.html"),
+      (err) => {
+        if (err) {
+          res.status(500).send("Internal Server Error");
+        }
+      }
+    );
+  } else if (req.accepts("json")) {
+    res.json({ message: "404 Not Found" });
+  } else {
+    res.type("txt").send("404 Not Found");
+  }
 });
 
 // Export the Express app instance for use in other modules (e.g., server.ts)

@@ -6,7 +6,12 @@
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": ".", // Set base URL for resolving paths
+    "paths": {
+      "@/db/*": ["./src/db/*"], // Explicit path for @/db
+      "@/*": ["./src/*"] // General path for other imports
+    }
   },
   "include": ["./drizzle.config.js", "./src/**/*", "./src/**/*.js"],
   "exclude": ["dist", "node_modules"]
