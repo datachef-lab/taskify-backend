@@ -1,82 +1,73 @@
+// Purpose: Entry point for the backend server.
 import { Server } from "http";
-import app from "./app"; // Import the Express application instance
-import "tsconfig-paths/register"; //for running ts-node and migrations
-// import { AppDataSource, connectDatabase } from "./config/data-source"; // Import the database connection instance
+import app from "./app";
+import "tsconfig-paths/register";
+import { connectToDatabase } from "./db";
+import { logError, handleShutdown } from "./utils/server-helpers";
 
-// Utility function for logging errors
-const logError = (error: Error, context: string): void => {
-    console.error(`[${context}]`, {
-        message: error.message || "Unknown error",
-        stack: error.stack || "No stack trace available",
-    });
-};
+/**
+ * Define the port for the server to listen on.
+ * Uses environment variable PORT or defaults to 4000.
+ */
+const PORT: number = parseInt(process.env.PORT || "4000", 10);
+let server: Server;
 
-// Handle uncaught exceptions globally
-process.on("uncaughtException", (err: Error) => {
-    logError(err, "Uncaught Exception");
-    // Gracefully shut down the process in case of an uncaught exception
-    process.exit(1);
-});
-
-// Immediately invoked async function to establish a database connection
+/**
+ * Immediately invoked async function to establish a database connection.
+ * If the connection fails, it logs the error and exits the process.
+ */
 (async () => {
     try {
-        // await connectDatabase(); // Attempt to initialize the database connection
-        console.log("✅ Database connection established successfully.");
+        await connectToDatabase();
     } catch (err) {
         logError(err as Error, "Database Connection Error");
-        process.exit(1); // Exit the process if the database connection fails
+        process.exit(1);
     }
 })();
 
-// Define the port on which the server will listen, defaulting to 4000 if not specified in environment variables
-const port: number = parseInt(process.env.PORT || "4000", 10);
-
-let server: Server;
-
-// Start the server
+/**
+ * Start the server and print available routes for debugging.
+ */
 try {
-    server = app.listen(port, () => {
-        console.log(`🚀 Server is running on port ${port}`);
-    });
-    app._router.stack.forEach(function (r: { route?: { path: string } }) {
-        if (r.route && r.route.path) {
-            console.log(r.route.path);
-        }
+    server = app.listen(PORT, () => {
+        console.log("==============================================");
+        console.log("🚀 Taskify Backend Server");
+        console.log("==============================================");
+        console.log("📍 Available Routes:");
+        app._router.stack
+            .filter((r: { route?: { path: string } }) => r.route && r.route.path)
+            .forEach((r: { route: { path: string } }) => {
+                console.log(` - ${r.route.path}`);
+            });
+        console.log("==============================================");
+        console.log(`🚀 Server is running at http://localhost:${PORT}`);
     });
 } catch (err) {
     logError(err as Error, "Server Startup Error");
     process.exit(1);
 }
 
-// Handle unhandled promise rejections globally
+/**
+ * Handles uncaught exceptions and logs the error details
+ */
+process.on("uncaughtException", (err: Error) => {
+    logError(err, "Uncaught Exception");
+    process.exit(1);
+});
+
+/**
+ * Handle unhandled promise rejections and ensure a graceful shutdown.
+ */
 process.on("unhandledRejection", (reason: Error) => {
     logError(reason, "Unhandled Rejection");
     if (server) {
         server.close(() => {
             console.log("🔒 Shutting down server due to unhandled rejection.");
-            process.exit(1); // Gracefully shut down the server
+            process.exit(1);
         });
     }
 });
 
-// Graceful shutdown for SIGTERM and SIGINT signals (e.g., from Docker or Kubernetes)
-const shutdown = async (signal: string) => {
-    console.log(`Received ${signal}. Shutting down gracefully...`);
-    if (server) {
-        server.close(() => {
-            console.log("🚦 Server closed.");
-        });
-    }
-    try {
-        // await AppDataSource.destroy(); // Close database connection
-        console.log("🔌 Database connection closed.");
-        process.exit(0); // Exit the process gracefully
-    } catch (err) {
-        logError(err as Error, "Error during shutdown");
-        process.exit(1);
-    }
-};
-
-process.on("SIGTERM", () => shutdown("SIGTERM"));
-process.on("SIGINT", () => shutdown("SIGINT"));
+// Graceful shutdown for SIGTERM and SIGINT
+process.on("SIGTERM", () => handleShutdown("SIGTERM", server));
+process.on("SIGINT", () => handleShutdown("SIGINT", server));

@@ -1,11 +1,9 @@
-import dotenv from "dotenv"; // Load environment variables from .env file
-dotenv.config(); // Initialize dotenv
+import dotenv from "dotenv";
+dotenv.config();
+import cors from "cors";
+import morgan from "morgan";
 import express, { Request, Response } from "express";
-import cors from "cors"; // Enable CORS for cross-origin requests
-import morgan from "morgan"; // HTTP request logger middleware
-// import router from "./routes/index.routes"; // Main application routes
-import endpoints from "express-list-endpoints"; // To list registered endpoints
-// import { httpErrorHandler } from "./support/errors"; // Custom error handler
+import endpoints from "express-list-endpoints";
 
 // Import user routes
 import userRoutes from "./modules/user/routes/user.routes";
@@ -14,14 +12,13 @@ const app = express(); // Create an Express application instance
 
 // **Middleware setup**
 
-// Parse incoming request bodies as JSON
-app.use(express.json());
+app.use(express.json()); // Parse incoming JSON requests
 
-// Enable CORS for all routes to allow cross-origin requests
-app.use(cors());
+app.use(express.urlencoded({ extended: true })); // Parse incoming requests with urlencoded payloads
 
-// Serve static files from the "public" directory (e.g., images, CSS, JavaScript)
-app.use(express.static("public"));
+app.use(cors()); // Enable CORS for all routes
+
+app.use(express.static("public")); // Serve static files from the "public" directory
 
 // **Request Logging Setup with Morgan**
 if (process.env.NODE_ENV === "development") {
@@ -46,8 +43,7 @@ app.get("/routes", (req, res) => {
     res.status(200).send(endpoints(app));
 });
 
-// **Main Routes Registration**
-// Register the user routes
+// Available routes
 app.use("/api/users", userRoutes);
 
 // **Global Error Handler Registration**
