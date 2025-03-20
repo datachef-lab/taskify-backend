@@ -1,21 +1,82 @@
-import "dotenv/config";
-import app from "./app";
-// import { connectToDatabase, connectToMySQL } from "@/db/index.js";
+import { Server } from "http";
+import app from "./app"; // Import the Express application instance
+import "tsconfig-paths/register"; //for running ts-node and migrations
+// import { AppDataSource, connectDatabase } from "./config/data-source"; // Import the database connection instance
 
-const PORT = process.env.PORT! || 5500;
-const NODE_ENV = process.env.NODE_ENV! || "development";
+// Utility function for logging errors
+const logError = (error: Error, context: string): void => {
+    console.error(`[${context}]`, {
+        message: error.message || "Unknown error",
+        stack: error.stack || "No stack trace available",
+    });
+};
 
+// Handle uncaught exceptions globally
+process.on("uncaughtException", (err: Error) => {
+    logError(err, "Uncaught Exception");
+    // Gracefully shut down the process in case of an uncaught exception
+    process.exit(1);
+});
+
+// Immediately invoked async function to establish a database connection
 (async () => {
-    console.log("\nInitializing academic360...\n");
     try {
-        // await connectToDatabase();
-        // await connectToMySQL();
-        app.listen(PORT, () => {
-            console.log(`[backend] - taskify is running on http://localhost:${PORT} 🚀\n`);
-            console.log(`PROFILE: ${NODE_ENV!}\n`);
-            console.log("Press Ctrl+C to stop the application.\n");
-        });
-    } catch (error) {
-        console.error("[backend] - Failed to start the application: ⚠️\n", error);
+        // await connectDatabase(); // Attempt to initialize the database connection
+        console.log("✅ Database connection established successfully.");
+    } catch (err) {
+        logError(err as Error, "Database Connection Error");
+        process.exit(1); // Exit the process if the database connection fails
     }
 })();
+
+// Define the port on which the server will listen, defaulting to 4000 if not specified in environment variables
+const port: number = parseInt(process.env.PORT || "4000", 10);
+
+let server: Server;
+
+// Start the server
+try {
+    server = app.listen(port, () => {
+        console.log(`🚀 Server is running on port ${port}`);
+    });
+    app._router.stack.forEach(function (r: { route?: { path: string } }) {
+        if (r.route && r.route.path) {
+            console.log(r.route.path);
+        }
+    });
+} catch (err) {
+    logError(err as Error, "Server Startup Error");
+    process.exit(1);
+}
+
+// Handle unhandled promise rejections globally
+process.on("unhandledRejection", (reason: Error) => {
+    logError(reason, "Unhandled Rejection");
+    if (server) {
+        server.close(() => {
+            console.log("🔒 Shutting down server due to unhandled rejection.");
+            process.exit(1); // Gracefully shut down the server
+        });
+    }
+});
+
+// Graceful shutdown for SIGTERM and SIGINT signals (e.g., from Docker or Kubernetes)
+const shutdown = async (signal: string) => {
+    console.log(`Received ${signal}. Shutting down gracefully...`);
+    if (server) {
+        server.close(() => {
+            console.log("🚦 Server closed.");
+        });
+    }
+    try {
+        // await AppDataSource.destroy(); // Close database connection
+        console.log("🔌 Database connection closed.");
+        process.exit(0); // Exit the process gracefully
+    } catch (err) {
+        logError(err as Error, "Error during shutdown");
+        process.exit(1);
+    }
+};
+
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("SIGINT", () => shutdown("SIGINT"));

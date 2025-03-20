@@ -1,15 +1,8 @@
-// import "dotenv/config";
-// import { drizzle } from "drizzle-orm/node-postgres";
-
-// const db = drizzle(process.env.NILEDB_URL!);
-
-import "dotenv/config";
-import pg, { PoolClient } from "pg";
-import { createConnection } from "mysql2/promise"; // For MySQL
 import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool, PoolClient } from "pg";
 
 // Create a connection pool
-const pool = new pg.Pool({
+const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
 });
 
