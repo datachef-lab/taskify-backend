@@ -1,10 +1,9 @@
-import { integer, pgEnum, pgTable, serial, timestamp } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, timestamp } from "drizzle-orm/pg-core";
 import { roleModel } from "./role.model";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
-
-export const permissionTypeEnum = pgEnum("permission_type", ["CREATE", "READ", "UPDATE", "DELETE", "ALL"]);
+import { permissionTypeEnum } from "../../../db-enums";
 
 export const permissionModel = pgTable("permissions", {
     id: serial().primaryKey(),

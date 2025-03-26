@@ -1,8 +1,8 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 // import { createConnection } from "mysql2";
 // import { Connection } from "mysql2/typings/mysql/lib/Connection";
-import { Pool, PoolClient } from "pg";
-
+import { Client, Pool, PoolClient } from "pg";
+import * as templates from "../modules/tasks/templates/models";
 // Create a connection pool
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -10,6 +10,13 @@ const pool = new Pool({
 
 // Initialize Drizzle ORM with the pool
 export const db = drizzle(pool, { casing: "snake_case" });
+
+const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+});
+client.connect();
+
+export const dbClient = drizzle(client, { schema: templates }); // TODO: Fix the schema imports
 
 // Test the connection 🔌
 export const connectToDatabase = async () => {

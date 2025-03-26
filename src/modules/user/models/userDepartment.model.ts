@@ -1,24 +1,16 @@
-import { integer, pgEnum, pgTable, serial, timestamp } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, timestamp } from "drizzle-orm/pg-core";
 import { userModel } from "./user.model";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
-
-export const userDepartmentTypeEnum = pgEnum("user_department_type", [
-    "QUOTATION",
-    "ACCOUNTS",
-    "DISPATCH",
-    "SERVICE",
-    "CUSTOMER",
-    "WORKSHOP",
-]);
+import { departmentTypeEnum } from "../../../db-enums";
 
 export const userDepartmentModel = pgTable("user_departments", {
     id: serial().primaryKey(),
     userId: integer("user_id_fk")
         .notNull()
         .references(() => userModel.id),
-    type: userDepartmentTypeEnum(),
+    type: departmentTypeEnum(),
     createdAt: timestamp().defaultNow().notNull(),
     updatedAt: timestamp()
         .notNull()

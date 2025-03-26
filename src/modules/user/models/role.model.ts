@@ -1,20 +1,9 @@
-import { integer, pgEnum, pgTable, serial, timestamp } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, timestamp } from "drizzle-orm/pg-core";
 import { userDepartmentModel } from "./userDepartment.model";
 import { relations } from "drizzle-orm";
 import { z } from "zod";
 import { createInsertSchema } from "drizzle-zod";
-
-export const roleTypeEnum = pgEnum("role_type", [
-    "ADMIN",
-    "OPERATOR",
-    "SALES",
-    "MARKETING",
-    "ACCOUNTS",
-    "DISPATCH",
-    "TECHNICIAN",
-    "SURVEYOR",
-    "MEMBER",
-]);
+import { roleTypeEnum } from "../../../db-enums";
 
 export const roleModel = pgTable("roles", {
     id: serial().primaryKey(),
