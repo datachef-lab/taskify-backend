@@ -1,3 +1,5 @@
+import { conditionalActionModel } from "./conditionalAction.model";
+import { conditionalActionUserModel } from "./conditionalActionUser.model";
 import { dropdownItemModel } from "./dropdownItem.model";
 import { dropdownTemplateModel } from "./dropdownTemplate.model";
 import { fieldTemplateModel } from "./fieldTemplate.model";
@@ -12,4 +14,6 @@ export {
     inputTemplateModel,
     dropdownTemplateModel,
     dropdownItemModel,
+    conditionalActionModel,
+    conditionalActionUserModel,
 };

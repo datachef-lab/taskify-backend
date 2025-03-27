@@ -41,3 +41,20 @@ export const inputTypeEnum = pgEnum("input_type", [
     "BOOLEAN",
     "RICH_TEXT_EDITOR",
 ]);
+
+export const conditionTypeEnum = pgEnum("condition_type", [
+    "EQUALS",
+    "LESS_THAN",
+    "LESS_THAN_EQUALS",
+    "GREATER_THAN",
+    "GREATER_THAN_EQUALS",
+]);
+
+export const conditionalActionType = pgEnum("conditional_action_type", [
+    "MARK_TASK_AS_DONE",
+    "MARK_FN_AS_DONE",
+    "MARK_FIELD_AS_DONE",
+    "NOTIFY_USERS",
+    "ADD_DYNAMIC_INPUT",
+    // "ADD_DATA"
+]);
