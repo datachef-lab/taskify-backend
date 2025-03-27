@@ -1,0 +1,1257 @@
+{
+    "id": "10a77e1c-0e53-4c0b-b84e-56abd0e35335",
+    "prevId": "00000000-0000-0000-0000-000000000000",
+    "version": "7",
+    "dialect": "postgresql",
+    "tables": {
+        "public.users": {
+            "name": "users",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "serial",
+                    "primaryKey": true,
+                    "notNull": true
+                },
+                "name": {
+                    "name": "name",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "email": {
+                    "name": "email",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "password": {
+                    "name": "password",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "phone": {
+                    "name": "phone",
+                    "type": "varchar(15)",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "profile_image": {
+                    "name": "profile_image",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "is_admin": {
+                    "name": "is_admin",
+                    "type": "boolean",
+                    "primaryKey": false,
+                    "notNull": false,
+                    "default": false
+                },
+                "disabled": {
+                    "name": "disabled",
+                    "type": "boolean",
+                    "primaryKey": false,
+                    "notNull": false,
+                    "default": false
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {},
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {
+                "users_email_unique": {
+                    "name": "users_email_unique",
+                    "nullsNotDistinct": false,
+                    "columns": ["email"]
+                }
+            },
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.roles": {
+            "name": "roles",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "serial",
+                    "primaryKey": true,
+                    "notNull": true
+                },
+                "department_id_fk": {
+                    "name": "department_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "type": {
+                    "name": "type",
+                    "type": "role_type",
+                    "typeSchema": "public",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {
+                "roles_department_id_fk_user_departments_id_fk": {
+                    "name": "roles_department_id_fk_user_departments_id_fk",
+                    "tableFrom": "roles",
+                    "tableTo": "user_departments",
+                    "columnsFrom": ["department_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                }
+            },
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.permissions": {
+            "name": "permissions",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "serial",
+                    "primaryKey": true,
+                    "notNull": true
+                },
+                "role_id_fk": {
+                    "name": "role_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "type": {
+                    "name": "type",
+                    "type": "permission_type",
+                    "typeSchema": "public",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "'READ'"
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {
+                "permissions_role_id_fk_roles_id_fk": {
+                    "name": "permissions_role_id_fk_roles_id_fk",
+                    "tableFrom": "permissions",
+                    "tableTo": "roles",
+                    "columnsFrom": ["role_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                }
+            },
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.user_departments": {
+            "name": "user_departments",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "serial",
+                    "primaryKey": true,
+                    "notNull": true
+                },
+                "user_id_fk": {
+                    "name": "user_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "type": {
+                    "name": "type",
+                    "type": "department_type",
+                    "typeSchema": "public",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {
+                "user_departments_user_id_fk_users_id_fk": {
+                    "name": "user_departments_user_id_fk_users_id_fk",
+                    "tableFrom": "user_departments",
+                    "tableTo": "users",
+                    "columnsFrom": ["user_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                }
+            },
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.task_templates": {
+            "name": "task_templates",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "serial",
+                    "primaryKey": true,
+                    "notNull": true
+                },
+                "name": {
+                    "name": "name",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "description": {
+                    "name": "description",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {},
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.field_templates": {
+            "name": "field_templates",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "serial",
+                    "primaryKey": true,
+                    "notNull": true
+                },
+                "name": {
+                    "name": "name",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "description": {
+                    "name": "description",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {},
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.fn_templates": {
+            "name": "fn_templates",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "serial",
+                    "primaryKey": true,
+                    "notNull": true
+                },
+                "name": {
+                    "name": "name",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "description": {
+                    "name": "description",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "department": {
+                    "name": "department",
+                    "type": "department_type",
+                    "typeSchema": "public",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "'SERVICE'"
+                },
+                "is_choice": {
+                    "name": "is_choice",
+                    "type": "boolean",
+                    "primaryKey": false,
+                    "notNull": false,
+                    "default": false
+                },
+                "next_follow_up_fn_template_id_fk": {
+                    "name": "next_follow_up_fn_template_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "type": {
+                    "name": "type",
+                    "type": "fn_template_type",
+                    "typeSchema": "public",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "'NORMAL'"
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {
+                "fn_templates_next_follow_up_fn_template_id_fk_fn_templates_id_fk": {
+                    "name": "fn_templates_next_follow_up_fn_template_id_fk_fn_templates_id_fk",
+                    "tableFrom": "fn_templates",
+                    "tableTo": "fn_templates",
+                    "columnsFrom": ["next_follow_up_fn_template_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                }
+            },
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.condtional_actions": {
+            "name": "condtional_actions",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "serial",
+                    "primaryKey": true,
+                    "notNull": true
+                },
+                "input_template_id_fk": {
+                    "name": "input_template_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "name": {
+                    "name": "name",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "type": {
+                    "name": "type",
+                    "type": "conditional_action_type",
+                    "typeSchema": "public",
+                    "primaryKey": false,
+                    "notNull": false,
+                    "default": "'ADD_DYNAMIC_INPUT'"
+                },
+                "description": {
+                    "name": "description",
+                    "type": "varchar(500)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "targeted_input_template_id_fk": {
+                    "name": "targeted_input_template_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "targeted_task_template_id_fk": {
+                    "name": "targeted_task_template_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "targeted_fn_template_id_fk": {
+                    "name": "targeted_fn_template_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "targeted_field_template_id_fk": {
+                    "name": "targeted_field_template_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {
+                "condtional_actions_input_template_id_fk_input_templates_id_fk": {
+                    "name": "condtional_actions_input_template_id_fk_input_templates_id_fk",
+                    "tableFrom": "condtional_actions",
+                    "tableTo": "input_templates",
+                    "columnsFrom": ["input_template_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                },
+                "condtional_actions_targeted_input_template_id_fk_input_templates_id_fk": {
+                    "name": "condtional_actions_targeted_input_template_id_fk_input_templates_id_fk",
+                    "tableFrom": "condtional_actions",
+                    "tableTo": "input_templates",
+                    "columnsFrom": ["targeted_input_template_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                },
+                "condtional_actions_targeted_task_template_id_fk_task_templates_id_fk": {
+                    "name": "condtional_actions_targeted_task_template_id_fk_task_templates_id_fk",
+                    "tableFrom": "condtional_actions",
+                    "tableTo": "task_templates",
+                    "columnsFrom": ["targeted_task_template_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                },
+                "condtional_actions_targeted_fn_template_id_fk_fn_templates_id_fk": {
+                    "name": "condtional_actions_targeted_fn_template_id_fk_fn_templates_id_fk",
+                    "tableFrom": "condtional_actions",
+                    "tableTo": "fn_templates",
+                    "columnsFrom": ["targeted_fn_template_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                },
+                "condtional_actions_targeted_field_template_id_fk_field_templates_id_fk": {
+                    "name": "condtional_actions_targeted_field_template_id_fk_field_templates_id_fk",
+                    "tableFrom": "condtional_actions",
+                    "tableTo": "field_templates",
+                    "columnsFrom": ["targeted_field_template_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                }
+            },
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.conditional_action_users": {
+            "name": "conditional_action_users",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "serial",
+                    "primaryKey": true,
+                    "notNull": true
+                },
+                "conditional_action_id_fk": {
+                    "name": "conditional_action_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "user_id_fk": {
+                    "name": "user_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": true
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {
+                "conditional_action_users_conditional_action_id_fk_condtional_actions_id_fk": {
+                    "name": "conditional_action_users_conditional_action_id_fk_condtional_actions_id_fk",
+                    "tableFrom": "conditional_action_users",
+                    "tableTo": "condtional_actions",
+                    "columnsFrom": ["conditional_action_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                },
+                "conditional_action_users_user_id_fk_users_id_fk": {
+                    "name": "conditional_action_users_user_id_fk_users_id_fk",
+                    "tableFrom": "conditional_action_users",
+                    "tableTo": "users",
+                    "columnsFrom": ["user_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                }
+            },
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.dropdown_templates": {
+            "name": "dropdown_templates",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "serial",
+                    "primaryKey": true,
+                    "notNull": true
+                },
+                "dropdown_item_id_fk": {
+                    "name": "dropdown_item_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "task_template_id_fk": {
+                    "name": "task_template_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "fn_template_id_fk": {
+                    "name": "fn_template_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "input_template_id_fk": {
+                    "name": "input_template_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {
+                "dropdown_templates_dropdown_item_id_fk_dropdown_items_id_fk": {
+                    "name": "dropdown_templates_dropdown_item_id_fk_dropdown_items_id_fk",
+                    "tableFrom": "dropdown_templates",
+                    "tableTo": "dropdown_items",
+                    "columnsFrom": ["dropdown_item_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                },
+                "dropdown_templates_task_template_id_fk_task_templates_id_fk": {
+                    "name": "dropdown_templates_task_template_id_fk_task_templates_id_fk",
+                    "tableFrom": "dropdown_templates",
+                    "tableTo": "task_templates",
+                    "columnsFrom": ["task_template_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                },
+                "dropdown_templates_fn_template_id_fk_fn_templates_id_fk": {
+                    "name": "dropdown_templates_fn_template_id_fk_fn_templates_id_fk",
+                    "tableFrom": "dropdown_templates",
+                    "tableTo": "fn_templates",
+                    "columnsFrom": ["fn_template_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                },
+                "dropdown_templates_input_template_id_fk_input_templates_id_fk": {
+                    "name": "dropdown_templates_input_template_id_fk_input_templates_id_fk",
+                    "tableFrom": "dropdown_templates",
+                    "tableTo": "input_templates",
+                    "columnsFrom": ["input_template_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                }
+            },
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.dropdown_items": {
+            "name": "dropdown_items",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "serial",
+                    "primaryKey": true,
+                    "notNull": true
+                },
+                "name": {
+                    "name": "name",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {},
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.input_templates": {
+            "name": "input_templates",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "serial",
+                    "primaryKey": true,
+                    "notNull": true
+                },
+                "name": {
+                    "name": "name",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "type": {
+                    "name": "type",
+                    "type": "input_type",
+                    "typeSchema": "public",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "'TEXT'"
+                },
+                "condition": {
+                    "name": "condition",
+                    "type": "condition_type",
+                    "typeSchema": "public",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "comparison_value": {
+                    "name": "comparison_value",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {},
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.field_template_input_templates": {
+            "name": "field_template_input_templates",
+            "schema": "",
+            "columns": {
+                "field_template_id_fk": {
+                    "name": "field_template_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "input_template_id_fk": {
+                    "name": "input_template_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": true
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {
+                "field_template_input_templates_field_template_id_fk_field_templates_id_fk": {
+                    "name": "field_template_input_templates_field_template_id_fk_field_templates_id_fk",
+                    "tableFrom": "field_template_input_templates",
+                    "tableTo": "field_templates",
+                    "columnsFrom": ["field_template_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                },
+                "field_template_input_templates_input_template_id_fk_input_templates_id_fk": {
+                    "name": "field_template_input_templates_input_template_id_fk_input_templates_id_fk",
+                    "tableFrom": "field_template_input_templates",
+                    "tableTo": "input_templates",
+                    "columnsFrom": ["input_template_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                }
+            },
+            "compositePrimaryKeys": {
+                "field_template_input_templates_field_template_id_fk_input_template_id_fk_pk": {
+                    "name": "field_template_input_templates_field_template_id_fk_input_template_id_fk_pk",
+                    "columns": ["field_template_id_fk", "input_template_id_fk"]
+                }
+            },
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.fn_template_field_templates": {
+            "name": "fn_template_field_templates",
+            "schema": "",
+            "columns": {
+                "fn_template_id_fk": {
+                    "name": "fn_template_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "field_template_id_fk": {
+                    "name": "field_template_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": true
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {
+                "fn_template_field_templates_fn_template_id_fk_fn_templates_id_fk": {
+                    "name": "fn_template_field_templates_fn_template_id_fk_fn_templates_id_fk",
+                    "tableFrom": "fn_template_field_templates",
+                    "tableTo": "fn_templates",
+                    "columnsFrom": ["fn_template_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                },
+                "fn_template_field_templates_field_template_id_fk_field_templates_id_fk": {
+                    "name": "fn_template_field_templates_field_template_id_fk_field_templates_id_fk",
+                    "tableFrom": "fn_template_field_templates",
+                    "tableTo": "field_templates",
+                    "columnsFrom": ["field_template_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                }
+            },
+            "compositePrimaryKeys": {
+                "fn_template_field_templates_fn_template_id_fk_field_template_id_fk_pk": {
+                    "name": "fn_template_field_templates_fn_template_id_fk_field_template_id_fk_pk",
+                    "columns": ["fn_template_id_fk", "field_template_id_fk"]
+                }
+            },
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.task_templates_fn_templates": {
+            "name": "task_templates_fn_templates",
+            "schema": "",
+            "columns": {
+                "task_template_id_fk": {
+                    "name": "task_template_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "fn_template_id_fk": {
+                    "name": "fn_template_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": true
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {
+                "task_templates_fn_templates_task_template_id_fk_task_templates_id_fk": {
+                    "name": "task_templates_fn_templates_task_template_id_fk_task_templates_id_fk",
+                    "tableFrom": "task_templates_fn_templates",
+                    "tableTo": "task_templates",
+                    "columnsFrom": ["task_template_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                },
+                "task_templates_fn_templates_fn_template_id_fk_fn_templates_id_fk": {
+                    "name": "task_templates_fn_templates_fn_template_id_fk_fn_templates_id_fk",
+                    "tableFrom": "task_templates_fn_templates",
+                    "tableTo": "fn_templates",
+                    "columnsFrom": ["fn_template_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                }
+            },
+            "compositePrimaryKeys": {
+                "task_templates_fn_templates_task_template_id_fk_fn_template_id_fk_pk": {
+                    "name": "task_templates_fn_templates_task_template_id_fk_fn_template_id_fk_pk",
+                    "columns": ["task_template_id_fk", "fn_template_id_fk"]
+                }
+            },
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.customers": {
+            "name": "customers",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "serial",
+                    "primaryKey": true,
+                    "notNull": true
+                },
+                "parent_company_id_fk": {
+                    "name": "parent_company_id_fk",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "name": {
+                    "name": "name",
+                    "type": "varchar(900)",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "email": {
+                    "name": "email",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "address": {
+                    "name": "address",
+                    "type": "varchar(900)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "state": {
+                    "name": "state",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "city": {
+                    "name": "city",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "pincode": {
+                    "name": "pincode",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "person_of_contact": {
+                    "name": "person_of_contact",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "phone": {
+                    "name": "phone",
+                    "type": "varchar(15)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "gst": {
+                    "name": "gst",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "pan": {
+                    "name": "pan",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "residential_address": {
+                    "name": "residential_address",
+                    "type": "varchar(900)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "birth_date": {
+                    "name": "birth_date",
+                    "type": "date",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "anniversary_date": {
+                    "name": "anniversary_date",
+                    "type": "date",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {
+                "customers_parent_company_id_fk_parent_companies_id_fk": {
+                    "name": "customers_parent_company_id_fk_parent_companies_id_fk",
+                    "tableFrom": "customers",
+                    "tableTo": "parent_companies",
+                    "columnsFrom": ["parent_company_id_fk"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                }
+            },
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.parent_companies": {
+            "name": "parent_companies",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "serial",
+                    "primaryKey": true,
+                    "notNull": true
+                },
+                "name": {
+                    "name": "name",
+                    "type": "varchar(900)",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "email": {
+                    "name": "email",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "address": {
+                    "name": "address",
+                    "type": "varchar(900)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "state": {
+                    "name": "state",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "city": {
+                    "name": "city",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "pincode": {
+                    "name": "pincode",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "person_of_contact": {
+                    "name": "person_of_contact",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "phone": {
+                    "name": "phone",
+                    "type": "varchar(15)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "business_type": {
+                    "name": "business_type",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "head_office_address": {
+                    "name": "head_office_address",
+                    "type": "varchar(900)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "remark": {
+                    "name": "remark",
+                    "type": "varchar(500)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {},
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        }
+    },
+    "enums": {
+        "public.condition_type": {
+            "name": "condition_type",
+            "schema": "public",
+            "values": ["EQUALS", "LESS_THAN", "LESS_THAN_EQUALS", "GREATER_THAN", "GREATER_THAN_EQUALS"]
+        },
+        "public.conditional_action_type": {
+            "name": "conditional_action_type",
+            "schema": "public",
+            "values": [
+                "MARK_TASK_AS_DONE",
+                "MARK_FN_AS_DONE",
+                "MARK_FIELD_AS_DONE",
+                "NOTIFY_USERS",
+                "ADD_DYNAMIC_INPUT"
+            ]
+        },
+        "public.department_type": {
+            "name": "department_type",
+            "schema": "public",
+            "values": ["QUOTATION", "ACCOUNTS", "DISPATCH", "SERVICE", "CUSTOMER", "WORKSHOP"]
+        },
+        "public.fn_template_type": {
+            "name": "fn_template_type",
+            "schema": "public",
+            "values": ["NORMAL", "SPECIAL"]
+        },
+        "public.input_type": {
+            "name": "input_type",
+            "schema": "public",
+            "values": [
+                "FILE",
+                "MULTIPLE_FILES",
+                "TEXT",
+                "TEXTAREA",
+                "NUMBER",
+                "EMAIL",
+                "PHONE",
+                "DROPDOWN",
+                "AMOUNT",
+                "TABLE",
+                "CHECKBOX",
+                "DATE",
+                "BOOLEAN",
+                "RICH_TEXT_EDITOR"
+            ]
+        },
+        "public.permission_type": {
+            "name": "permission_type",
+            "schema": "public",
+            "values": ["CREATE", "READ", "UPDATE", "DELETE", "ALL"]
+        },
+        "public.role_type": {
+            "name": "role_type",
+            "schema": "public",
+            "values": [
+                "ADMIN",
+                "OPERATOR",
+                "SALES",
+                "MARKETING",
+                "ACCOUNTS",
+                "DISPATCH",
+                "TECHNICIAN",
+                "SURVEYOR",
+                "MEMBER"
+            ]
+        }
+    },
+    "schemas": {},
+    "sequences": {},
+    "roles": {},
+    "policies": {},
+    "views": {},
+    "_meta": {
+        "columns": {},
+        "schemas": {},
+        "tables": {}
+    }
+}

@@ -6,6 +6,9 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "nodemon --watch src --ext ts src/server.ts",
+        "db:generate": "npx drizzle-kit generate",
+        "db:migrate": "npx drizzle-kit migrate",
+        "db:studio": "npx drizzle-kit studio",
         "start": "tsc && node dist/server.js",
         "prepare": "husky"
     },
