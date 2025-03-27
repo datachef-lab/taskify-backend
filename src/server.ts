@@ -4,6 +4,8 @@ import app from "./app";
 import "tsconfig-paths/register";
 import { connectToDatabase } from "./db";
 import { logError, handleShutdown } from "./utils/server-helpers";
+import { logger } from "./utils/logger";
+import chalk from "chalk";
 
 /**
  * Define the port for the server to listen on.
@@ -30,17 +32,35 @@ let server: Server;
  */
 try {
     server = app.listen(PORT, () => {
-        console.log("==============================================");
-        console.log("🚀 Taskify Backend Server");
-        console.log("==============================================");
-        console.log("📍 Available Routes:");
-        app._router.stack
-            .filter((r: { route?: { path: string } }) => r.route && r.route.path)
-            .forEach((r: { route: { path: string } }) => {
-                console.log(` - ${r.route.path}`);
+        logger.server("Taskify Backend Server");
+
+        logger.info("Available Routes:", "Server");
+
+        // Get all registered routes and group them together before logging
+        const routes = app._router.stack
+            .filter((r: { route?: { path: string; methods?: Record<string, boolean> } }) => r.route && r.route.path)
+            .map((r: { route: { path: string; methods?: Record<string, boolean> } }) => {
+                // Get the HTTP method
+                const method = r.route.methods
+                    ? Object.keys(r.route.methods).find((m) => r.route.methods![m])
+                    : undefined;
+
+                return { path: r.route.path, method };
             });
-        console.log("==============================================");
-        console.log(`🚀 Server is running at http://localhost:${PORT}`);
+
+        // Log all routes together with just one newline at the start
+        console.log(
+            "\n" +
+                routes
+                    .map((route: { path: string; method?: string }) => {
+                        const methodColor = route.method ? logger.getMethodColor(route.method) : chalk.white;
+                        const methodStr = route.method ? `[${methodColor(route.method.toUpperCase())}]` : "";
+                        return `  ${chalk.cyan("→")} ${methodStr} ${chalk.white(route.path)}`;
+                    })
+                    .join("\n")
+        );
+
+        logger.success(`Server is running at http://localhost:${PORT}`, "Server");
     });
 } catch (err) {
     logError(err as Error, "Server Startup Error");
@@ -62,7 +82,7 @@ process.on("unhandledRejection", (reason: Error) => {
     logError(reason, "Unhandled Rejection");
     if (server) {
         server.close(() => {
-            console.log("🔒 Shutting down server due to unhandled rejection.");
+            logger.warn("Shutting down server due to unhandled rejection", "System");
             process.exit(1);
         });
     }

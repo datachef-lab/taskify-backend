@@ -1,5 +1,6 @@
 // Purpose: Common server utilities and helpers.
 import { Server } from "http";
+import { logger } from "./logger";
 
 /*
  * Utility function for logging errors
@@ -9,10 +10,7 @@ import { Server } from "http";
  * @returns {void}
  */
 export const logError = (error: Error, context: string): void => {
-    console.error(`[${context}]`, {
-        message: error.message || "Unknown error",
-        stack: error.stack || "No stack trace available",
-    });
+    logger.error("An error occurred", error, context);
 };
 
 /*
@@ -23,12 +21,14 @@ export const logError = (error: Error, context: string): void => {
  * @returns {Promise<void>}
  */
 export const handleShutdown = async (signal: "SIGTERM" | "SIGINT", server: Server) => {
-    console.log(`⚠️ Received ${signal}. Shutting down gracefully...`);
+    logger.warn(`Received ${signal}. Shutting down gracefully...`, "System");
+
     if (server) {
-        server.close(() => console.log("🛑 Server closed."));
+        server.close(() => logger.info("Server closed", "Shutdown"));
     }
+
     try {
-        console.log("🔌 Database connection closed.");
+        logger.info("Database connection closed", "Shutdown");
         process.exit(0);
     } catch (error) {
         logError(error as Error, "Shutdown Error");

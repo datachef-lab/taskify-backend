@@ -1,32 +1,47 @@
+/**
+ * Database connection and Drizzle ORM configuration
+ *
+ * This file establishes database connections and exports Drizzle ORM instances
+ * with the complete schema imported from schema.ts
+ */
+
 import { drizzle } from "drizzle-orm/node-postgres";
 // import { createConnection } from "mysql2";
 // import { Connection } from "mysql2/typings/mysql/lib/Connection";
 import { Client, Pool, PoolClient } from "pg";
-import * as templates from "../modules/tasks/templates/models";
-// Create a connection pool
+import * as schema from "./schema";
+import { logger } from "../utils/logger";
+
+// Create a PostgreSQL connection pool for efficient connection management
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
 });
 
-// Initialize Drizzle ORM with the pool
-export const db = drizzle(pool, { casing: "snake_case" });
+// Initialize the primary Drizzle ORM instance with connection pool
+// This is the recommended way to use Drizzle in a production environment
+// The schema includes all models exported from schema.ts
+export const db = drizzle(pool, { schema, casing: "snake_case" });
 
+// Create a single client connection
+// This is useful for transactions or when a dedicated connection is needed
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
 });
 client.connect();
 
-export const dbClient = drizzle(client, { schema: templates }); // TODO: Fix the schema imports
+// Initialize a secondary Drizzle ORM instance with the dedicated client
+// This can be used for special operations that require a dedicated connection
+export const dbClient = drizzle(client, { schema });
 
-// Test the connection 🔌
+// Test the database connection on application startup
 export const connectToDatabase = async () => {
     try {
-        const client: PoolClient = await pool.connect(); // Test the connection ✔️
-        console.log("Connected to the database successfully. 🎉");
+        const client: PoolClient = await pool.connect();
+        logger.success("Connected to the database successfully", "Database");
         client.release(); // Release the connection back to the pool
     } catch (error) {
-        console.log(process.env.DATABASE_URL);
-        console.error("Failed to connect to the database: ⚠️", error);
+        logger.error("Failed to connect to the database", error as Error, "Database");
+        logger.info(`Connection URL: ${process.env.DATABASE_URL}`, "Database");
         process.exit(1); // Exit the application if the database connection fails
     }
 };
@@ -45,9 +60,9 @@ export const mysqlConnection: Connection = createConnection({
 export const connectToMySQL = async () => {
     try {
         await mysqlConnection.query("SELECT COUNT(*) AS totalRows FROM community");
-        console.log("[MySQL] - Connected successfully. 🎉");
+        logger.success("Connected to MySQL successfully", "MySQL");
     } catch (error) {
-        console.error("[MySQL] - Connection failed: ⚠️", error);
+        logger.error("MySQL connection failed", error as Error, "MySQL");
     }
 };
 */
