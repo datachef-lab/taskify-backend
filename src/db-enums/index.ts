@@ -50,7 +50,7 @@ export const conditionTypeEnum = pgEnum("condition_type", [
     "GREATER_THAN_EQUALS",
 ]);
 
-export const conditionalActionType = pgEnum("conditional_action_type", [
+export const conditionalActionTypeEnum = pgEnum("conditional_action_type", [
     "MARK_TASK_AS_DONE",
     "MARK_FN_AS_DONE",
     "MARK_FIELD_AS_DONE",
@@ -58,3 +58,5 @@ export const conditionalActionType = pgEnum("conditional_action_type", [
     "ADD_DYNAMIC_INPUT",
     // "ADD_DATA"
 ]);
+
+export const priorityType = pgEnum("priority_type", ["NORMAL", "MEDIUM", "HIGH"]);
