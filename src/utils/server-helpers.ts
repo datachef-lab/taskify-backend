@@ -1,6 +1,7 @@
 // Purpose: Common server utilities and helpers.
 import { Server } from "http";
 import { logger } from "./logger";
+import { JobScheduler } from "../jobs/scheduler";
 
 /*
  * Utility function for logging errors
@@ -22,6 +23,9 @@ export const logError = (error: Error, context: string): void => {
  */
 export const handleShutdown = async (signal: "SIGTERM" | "SIGINT", server: Server) => {
     logger.warn(`Received ${signal}. Shutting down gracefully...`, "System");
+
+    // Stop all scheduled jobs
+    JobScheduler.stopAllJobs();
 
     if (server) {
         server.close(() => logger.info("Server closed", "Shutdown"));

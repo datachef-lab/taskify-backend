@@ -6,6 +6,7 @@ import { connectToDatabase } from "./db";
 import { logError, handleShutdown } from "./utils/server-helpers";
 import { logger } from "./utils/logger";
 import chalk from "chalk";
+import { JobScheduler } from "./jobs/scheduler";
 
 /**
  * Define the port for the server to listen on.
@@ -33,6 +34,9 @@ let server: Server;
 try {
     server = app.listen(PORT, () => {
         logger.server("Taskify Backend Server");
+
+        // Initialize scheduled jobs
+        JobScheduler.initializeJobs();
 
         logger.info("Available Routes:", "Server");
 
@@ -91,3 +95,13 @@ process.on("unhandledRejection", (reason: Error) => {
 // Graceful shutdown for SIGTERM and SIGINT
 process.on("SIGTERM", () => handleShutdown("SIGTERM", server));
 process.on("SIGINT", () => handleShutdown("SIGINT", server));
+
+/**
+ * Handle process exit events to clean up resources
+ */
+process.on("exit", () => {
+    // Stop all scheduled jobs
+    JobScheduler.stopAllJobs();
+
+    // ... other cleanup as needed
+});

@@ -1,6 +1,8 @@
 {
     "compilerOptions": {
         "target": "ES6",
+        "types": ["node", "express"],
+        "typeRoots": ["./node_modules/@types", "./src/types"],
         "module": "CommonJS",
         "outDir": "./dist",
         "rootDir": "./src",
@@ -8,6 +10,12 @@
         "esModuleInterop": true,
         "skipLibCheck": true
     },
-    "include": ["./drizzle.config.js", "./src/**/*", "./src/**/*.js"],
+    "include": [
+        "./drizzle.config.js",
+        "./src/**/*",
+        "./src/**/*.js",
+        "./src/types/express.d.ts",
+        "./src/types/express.d.js"
+    ],
     "exclude": ["dist", "node_modules"]
 }

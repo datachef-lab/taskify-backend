@@ -27,5 +27,10 @@ export * from "../modules/tasks/templates/models/joins.model";
 export * from "../modules/stakeholders/models/customer.model";
 export * from "../modules/stakeholders/models/parentCompany.model";
 
+// Export all models from analytics module
+export * from "../modules/analytics/models/activityLog.model";
+export * from "../modules/analytics/models/statistic.model";
+export * from "../modules/analytics/models/performanceMetric.model";
+
 // Export all DB enums
 export * from "../db-enums";

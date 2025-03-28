@@ -8,6 +8,12 @@ import chalk from "chalk";
 
 // Import user routes
 import userRoutes from "./modules/user/routes/user.routes";
+// Import analytics routes
+import analyticsRoutes from "./modules/analytics/routes/analytics.routes";
+// Import task routes
+import taskRoutes from "./modules/tasks/routes/task.routes";
+// Import performance middleware
+import { trackPerformance } from "./middlewares/performance";
 
 const app = express(); // Create an Express application instance
 
@@ -20,6 +26,9 @@ app.use(express.urlencoded({ extended: true })); // Parse incoming requests with
 app.use(cors()); // Enable CORS for all routes
 
 app.use(express.static("public")); // Serve static files from the "public" directory
+
+// Performance tracking middleware
+app.use(trackPerformance());
 
 // **Custom Morgan Token for Status Colors**
 morgan.token("status-colored", (req, res) => {
@@ -70,6 +79,8 @@ morgan.token("method-colored", (req) => {
 // **Request Logging Setup with Morgan**
 if (process.env.NODE_ENV === "development") {
     // Custom format for development
+    // Using any for tokens because of compatibility issues with morgan types
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const customFormat = (tokens: any, req: Request, res: Response) => {
         const timestamp = new Date().toISOString();
         const method = tokens["method-colored"](req, res);
@@ -103,6 +114,8 @@ app.get("/routes", (req, res) => {
 
 // Available routes
 app.use("/api/users", userRoutes);
+app.use("/api/analytics", analyticsRoutes);
+app.use("/api/tasks", taskRoutes);
 
 // **Global Error Handler Registration**
 // Register the custom error handler to manage application errors centrally

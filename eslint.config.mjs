@@ -21,7 +21,6 @@ export default [
         rules: {
             "no-unused-vars": "warn",
             "no-undef": "warn",
-            "no-use-before-define": "error",
             camelcase: "error",
         },
     },

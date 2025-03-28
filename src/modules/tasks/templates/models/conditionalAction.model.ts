@@ -1,5 +1,5 @@
 import { integer, pgTable, serial, timestamp, varchar } from "drizzle-orm/pg-core";
-import { conditionalActionTypeEnum } from "../../../../db-enums";
+import { conditionalActionTypeEnum, conditionTypeEnum } from "../../../../db-enums";
 import { fieldTemplateModel } from "./fieldTemplate.model";
 import { inputTemplateModel } from "./inputTemplate.model";
 import { fnTemplateModel } from "./fnTemplate.model";
@@ -12,8 +12,10 @@ export const conditionalActionModel = pgTable("condtional_actions", {
     id: serial().primaryKey(),
     inputTemplateId: integer("input_template_id_fk").references(() => inputTemplateModel.id),
     name: varchar({ length: 255 }).notNull(),
-    type: conditionalActionTypeEnum().default("ADD_DYNAMIC_INPUT"),
     description: varchar({ length: 500 }),
+    condition: conditionTypeEnum(),
+    comparisonValue: varchar({ length: 255 }),
+    action: conditionalActionTypeEnum().default("ADD_DYNAMIC_INPUT"),
     targetedInputTemplateId: integer("targeted_input_template_id_fk").references(() => inputTemplateModel.id),
     targetedTaskTemplateId: integer("targeted_task_template_id_fk").references(() => taskTemplateModel.id),
     targetedFnTemplateId: integer("targeted_fn_template_id_fk").references(() => fnTemplateModel.id),

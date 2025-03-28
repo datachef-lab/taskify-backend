@@ -60,3 +60,8 @@ export const conditionalActionTypeEnum = pgEnum("conditional_action_type", [
 ]);
 
 export const priorityType = pgEnum("priority_type", ["NORMAL", "MEDIUM", "HIGH"]);
+
+// Analytics Enums
+export { activityTypeEnum, entityTypeEnum } from "../modules/analytics/models/activityLog.model";
+export { statisticTypeEnum, timePeriodEnum } from "../modules/analytics/models/statistic.model";
+export { metricTypeEnum } from "../modules/analytics/models/performanceMetric.model";

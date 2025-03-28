@@ -13,7 +13,7 @@ class Logger {
     info(message: string, context?: string): void {
         const timestamp = new Date().toISOString();
         const contextStr = context ? chalk.cyan(`[${context}]`) : "";
-        console.log(`\n${chalk.gray(timestamp)} ${chalk.blue("INFO")} ${contextStr} ${message}`);
+        console.log(`\n${chalk.gray(timestamp)} ${chalk.blue("INFO")}    ${contextStr}\t${message}`);
     }
 
     /**
@@ -24,7 +24,7 @@ class Logger {
     success(message: string, context?: string): void {
         const timestamp = new Date().toISOString();
         const contextStr = context ? chalk.cyan(`[${context}]`) : "";
-        console.log(`\n${chalk.gray(timestamp)} ${chalk.green("SUCCESS")} ${contextStr} ${message}`);
+        console.log(`\n${chalk.gray(timestamp)} ${chalk.green("SUCCESS")} ${contextStr}\t${message}`);
     }
 
     /**
@@ -35,7 +35,7 @@ class Logger {
     warn(message: string, context?: string): void {
         const timestamp = new Date().toISOString();
         const contextStr = context ? chalk.cyan(`[${context}]`) : "";
-        console.log(`\n${chalk.gray(timestamp)} ${chalk.yellow("WARNING")} ${contextStr} ${message}`);
+        console.log(`\n${chalk.gray(timestamp)} ${chalk.yellow("WARNING")} ${contextStr}\t${message}`);
     }
 
     /**
@@ -47,7 +47,7 @@ class Logger {
     error(message: string, error?: Error, context?: string): void {
         const timestamp = new Date().toISOString();
         const contextStr = context ? chalk.cyan(`[${context}]`) : "";
-        console.error(`\n${chalk.gray(timestamp)} ${chalk.red("ERROR")} ${contextStr} ${message}`);
+        console.error(`\n${chalk.gray(timestamp)} ${chalk.red("ERROR")} ${contextStr}\t${message}`);
 
         if (error?.stack) {
             console.error(chalk.red(error.stack));
