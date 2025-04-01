@@ -4,13 +4,13 @@ import { Role } from "../modules/user/models/role.model";
 import { Permission } from "../modules/user/models/permission.model";
 
 export interface RoleDto extends Role {
-    permissions: Permission[];
+    permissions?: Permission[];
 }
 
 export interface UserDepartmentDto extends UserDepartment {
-    roles: RoleDto[];
+    roles?: RoleDto[];
 }
 
 export interface UserDto extends User {
-    departments: UserDepartmentDto[];
+    departments?: UserDepartmentDto[];
 }

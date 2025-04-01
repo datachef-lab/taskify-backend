@@ -1,8 +1,9 @@
 import bcrypt from "bcryptjs";
 import { db } from "../../../db";
 import { userModel } from "../models/user.model";
+import { UserDto } from "../../../types/user.type";
 
-export const createUserService = async (userData: any) => {
+export const createUserService = async (userData: UserDto) => {
     // Hash the password before storing it in the database
     const hashedPassword = await bcrypt.hash(userData.password, 10);
     userData.password = hashedPassword;
