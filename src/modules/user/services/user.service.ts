@@ -1,49 +1,19 @@
-// import { db } from "../../../db";
-// import { users } from "../../../db/schema";
-// import { eq } from "drizzle-orm";
-// import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
+import { db } from "../../../db";
+import { userModel } from "../models/user.model";
 
-// // async function createUser(userData: IUser): Promise < IUser > {
-// //     const salt = await bcrypt.genSalt(10);
-// //     const hashedPassword = await bcrypt.hash(userData.password, salt);
+export const createUserService = async (userData: any) => {
+    // Hash the password before storing it in the database
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+    userData.password = hashedPassword;
 
-// //     const dbUser = {
-// //         ...userData,
-// //         password: hashedPassword,
-// //     };
-// //     const [user] = await db.insert(users).values(dbUser).returning();
-// //     return user;
-// // }
+    // Create a new user
+    const [newUser] = await db.insert(userModel).values(userData).returning();
 
-// // async function getAllUsers(): Promise < IUser[] > {
-// //     return await db.select().from(users);
-// // }
-
-// // async function getUserById(id: string): Promise < IUser | null > {
-// //     const [user] = await db
-// //         .select()
-// //         .from(users)
-// //         .where(eq(users.id, parseInt(id)));
-// //     return user || null;
-// // }
-
-// // async function getUserByEmail(email: string): Promise < IUser | null > {
-// //     const [user] = await db.select().from(users).where(eq(users.email, email));
-// //     return user || null;
-// // }
-
-// // async function updateUser(id: string, userData: Partial<IUser>): Promise < IUser | null > {
-// //     const [user] = await db
-// //         .update(users)
-// //         .set(userData)
-// //         .where(eq(users.id, parseInt(id)))
-// //         .returning();
-// //     return user || null;
-// // }
-
-// // //   async function getUsersByDepartment(department: string): Promise<IUser[]> {
-// // //     return await db
-// // //       .select()
-// // //       .from(users)
-// // //       .where(eq(users.department, department));
-// // //   }
+    return newUser;
+};
+export const getUserByIdService = () => {};
+export const updateUserService = () => {};
+export const deleteUserService = () => {};
+export const getAllUsersService = () => {};
+export const getUserByEmailService = () => {};

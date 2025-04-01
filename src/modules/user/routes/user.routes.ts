@@ -1,79 +1,18 @@
-import express from "express";
-import {
-    createUser,
-    // getAllUsers,
-    // getUserByEmail,
-    // getUserById
-} from "../controllers/user.controller";
+import { Router } from "express";
+import { createUser } from "../controllers/user.controller";
 
-const router = express.Router();
+const userRouter = Router();
 
-/*
- * @route  POST /api/users/
- * @desc   Create a new user
- * @access Public (for now)
- *
- * @returns {User} - The newly created user
- */
-router.post("/", createUser);
+// Route to create a new user
+userRouter.post("/", createUser);
 
-// To be implemented
-// ---------------------------------------------------------
-// // Get all users
-// router.get("/", async (req: Request, res: Response) => {
-//     try {
-//         await getAllUsers(req, res);
-//     } catch (error: unknown) {
-//         console.log(error);
-//         res.status(500).json({ error: "Failed to fetch users" });
-//     }
-// });
+// // Route to get a user by ID
+// userRouter.get("/:id", getUserById);
 
-// // Get user by ID
-// router.get("/:id", async (req: Request, res: Response) => {
-//     try {
-//         await getUserById(req, res);
-//     } catch (error: unknown) {
-//         console.log(error);
-//         res.status(500).json({ error: "Failed to fetch user" });
-//     }
-// });
+// // Route to update a user by ID
+// userRouter.put("/:id", updateUser);
 
-// // Get users by department
-// // router.get("/department/:department", async (req: Request, res: Response) => {
-// //   try {
-// //     await userController.getUsersByDepartment(req, res);
-// //   } catch (error) {
-// //     res.status(500).json({ error: "Failed to fetch users by department" });
-// //   }
-// // });
+// // Route to delete a user by ID
+// userRouter.delete("/:id", deleteUser);
 
-// // Get user by email
-// router.get("/email/:email", async (req: Request, res: Response) => {
-//     try {
-//         await getUserByEmail(req, res);
-//     } catch (error: unknown) {
-//         console.log(error);
-//         res.status(500).json({ error: "Failed to fetch user by email" });
-//     }
-// });
-
-// // Update user
-// // router.put("/:id", validateUser, async (req: Request, res: Response) => {
-// //   try {
-// //     await userController.updateUser(req, res);
-// //   } catch (error) {
-// //     res.status(500).json({ error: "Failed to update user" });
-// //   }
-// // });
-
-// // Delete user
-// // router.delete("/:id", async (req: Request, res: Response) => {
-// //   try {
-// //     await userController.deleteUser(req, res);
-// //   } catch (error) {
-// //     res.status(500).json({ error: "Failed to delete user" });
-// //   }
-// // });
-
-export default router;
+export default userRouter;

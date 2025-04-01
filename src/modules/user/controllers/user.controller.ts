@@ -1,93 +1,73 @@
 import { Request, Response } from "express";
-// import { ApiResponse } from "../../../utils/api-response";
+import { createUserService } from "../services/user.service";
+import { ApiResponse } from "../../../utils/api-response";
 
-export async function createUser(req: Request, res: Response): Promise<void> {
-    console.log(req, res);
+// Controller to create a new user
+export const createUser = async (req: Request, res: Response): Promise<void> => {
     try {
-        // Validate required fields
-        // const { email, password, ...otherData } = req.body;
-        // if (!email || !password) {
-        //     return ApiResponse.badRequest(res, "Email and password are required");
-        // }
-        // // Basic email validation
-        // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        // if (!emailRegex.test(email)) {
-        //     return ApiResponse.badRequest(res, "Invalid email format");
-        // }
-        // // Password strength validation
-        // if (password.length < 8) {
-        //     return ApiResponse.badRequest(res, "Password must be at least 8 characters long");
-        // }
-        // const userData = {
-        //     email,
-        //     password, // Password will be hashed in the service layer
-        //     ...otherData,
-        // };
-        // const user = await createUser(userData);
-        // Don't send password back in response
-        // const { password: _, ...userWithoutPassword } = user;
-        // ApiResponse.success(res, 201, "User created successfully", "userWithoutPassword");
-    } catch (error) {
-        if ((error as { code: number }).code === 11000) {
-            // MongoDB duplicate key error
-            // return ApiResponse.error(res, "Email already exists");
+        const { name, email, password, phone } = req.body;
+        const fields = ["name", "email", "password", "phone"];
+        const missingFields = fields.filter((field) => !req.body[field]);
+
+        if (missingFields.length > 0) {
+            const message = `The following fields are required: ${missingFields.join(", ")}`;
+            ApiResponse.badRequest(res, message);
+            return;
         }
-        // return ApiResponse.error(res, "An error occurred");
+
+        const userData = {
+            name,
+            email,
+            password,
+            phone,
+        };
+
+        const user = await createUserService(userData);
+        ApiResponse.success(res, { status: 201, data: user });
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "An unknown error occurred ceating user";
+        ApiResponse.error(res, { message: errorMessage });
     }
-}
+};
 
-// export async function getAllUsers(req: Request, res: Response): Promise<void> {
-//     // try {
-//     //     // const users = await this.userService.getAllUsers();
-//     //     ApiResponse.success(res, 200, "Users retrieved successfully", users);
-//     // } catch (error: unknown) {
-//     //     ApiResponse.error(res, error as Error);
-//     // }
-// }
+// Controller to get a user by ID
+// export const getUserById = async (req: Request, res: Response): Promise<void> => {
+//     try {
+//         const user = await getUserByIdService(req.params.id);
+//         if (!user) {
+//             res.status(404).json({ success: false, message: "User not found" });
+//             return;
+//         }
+//         res.status(200).json({ success: true, data: user });
+//     } catch (error) {
+//         res.status(500).json({ success: false, message: error.message });
+//     }
+// };
 
-// export async function getUserById(req: Request, res: Response): Promise<void> {
-//     // try {
-//     //     const user = await this.userService.getUserById(req.params.id);
-//     //     if (!user) {
-//     //         return ApiResponse.notFound(res, "User not found");
-//     //     }
-//     //     ApiResponse.success(res, 200, "User retrieved successfully", user);
-//     // } catch (error) {
-//     //     ApiResponse.error(res, error);
-//     // }
-// }
+// Controller to update a user by ID
+// export const updateUser = async (req: Request, res: Response): Promise<void> => {
+//     try {
+//         const updatedUser = await updateUserService(req.params.id, req.body);
+//         if (!updatedUser) {
+//             res.status(404).json({ success: false, message: "User not found" });
+//             return;
+//         }
+//         res.status(200).json({ success: true, data: updatedUser });
+//     } catch (error) {
+//         res.status(500).json({ success: false, message: error.message });
+//     }
+// };
 
-// //   async getUsersByDepartment(req: Request, res: Response): Promise<void> {
-// //     try {
-// //       const users = await this.userService.getUsersByDepartment(
-// //         req.params.department
-// //       );
-// //       ApiResponse.success(res, 200, "Users retrieved successfully", users);
-// //     } catch (error) {
-// //       ApiResponse.error(res, error);
-// //     }
-// //   }
-
-// export async function getUserByEmail(req: Request, res: Response): Promise<void> {
-//     // try {
-//     //     const user = await this.userService.getUserByEmail(req.params.email);
-//     //     if (!user) {
-//     //         return ApiResponse.notFound(res, "User not found");
-//     //     }
-//     //     ApiResponse.success(res, 200, "User retrieved successfully", user);
-//     // } catch (error) {
-//     //     ApiResponse.error(res, error);
-//     // }
-// }
-
-// export async function updateUser(req: Request, res: Response): Promise<void> {
-//     // try {
-//     //     const user = await this.userService.updateUser(req.params.id, req.body);
-//     //     if (!user) {
-//     //         return ApiResponse.notFound(res, "User not found");
-//     //     }
-//     //     ApiResponse.success(res, 200, "User updated successfully", user);
-//     // } catch (error) {
-//     //     ApiResponse.error(res, error);
-//     // }
-// }
+// Controller to delete a user by ID
+// export const deleteUser = async (req: Request, res: Response): Promise<void> => {
+//     try {
+//         const deleted = await deleteUserService(req.params.id);
+//         if (!deleted) {
+//             res.status(404).json({ success: false, message: "User not found" });
+//             return;
+//         }
+//         res.status(200).json({ success: true, message: "User deleted successfully" });
+//     } catch (error) {
+//         res.status(500).json({ success: false, message: error.message });
+//     }
+// };

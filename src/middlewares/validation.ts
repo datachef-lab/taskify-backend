@@ -6,8 +6,7 @@ import { Request, Response, NextFunction } from "express";
 export const users = pgTable("users", {
     id: text("id").primaryKey(),
     email: varchar("email", { length: 255 }).notNull().unique(),
-    firstName: varchar("first_name", { length: 50 }).notNull(),
-    lastName: varchar("last_name", { length: 50 }).notNull(),
+    name: varchar("name", { length: 255 }).notNull(),
     department: varchar("department", { length: 100 }).notNull(),
     password: varchar("password", { length: 255 }).notNull(),
 });
@@ -15,8 +14,7 @@ export const users = pgTable("users", {
 // Create Zod schemas from your Drizzle schema
 export const insertUserSchema = createInsertSchema(users, {
     email: z.string().email(),
-    firstName: z.string().min(2).max(50),
-    lastName: z.string().min(2).max(50),
+    name: z.string().min(2).max(255),
     department: z.string().min(1),
     password: z
         .string()
