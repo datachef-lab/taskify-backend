@@ -1,5 +1,12 @@
 import { Request, Response } from "express";
-import { createUserService } from "../services/user.service";
+import {
+    createUserService,
+    deleteUserService,
+    findAllUsers,
+    getUserByEmailService,
+    getUserByIdService,
+    updateUserService,
+} from "../services/user.service";
 import { ApiResponse } from "../../../utils/api-response";
 
 // Controller to create a new user
@@ -11,6 +18,13 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 
         if (missingFields.length > 0) {
             const message = `The following fields are required: ${missingFields.join(", ")}`;
+            ApiResponse.badRequest(res, message);
+            return;
+        }
+
+        const existingUser = await getUserByEmailService(email);
+        if (existingUser) {
+            const message = existingUser.email === email ? "Email already exists" : "Username already exists";
             ApiResponse.badRequest(res, message);
             return;
         }
@@ -30,44 +44,116 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
     }
 };
 
+// Controller to get all users
+export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const users = await findAllUsers();
+
+        return ApiResponse.success(res, { status: 200, data: users, message: "All users fetched successfully!" });
+    } catch {
+        return ApiResponse.error(res, { message: "An unexpected error occurred while fetching all users" });
+    }
+};
+
 // Controller to get a user by ID
-// export const getUserById = async (req: Request, res: Response): Promise<void> => {
-//     try {
-//         const user = await getUserByIdService(req.params.id);
-//         if (!user) {
-//             res.status(404).json({ success: false, message: "User not found" });
-//             return;
-//         }
-//         res.status(200).json({ success: true, data: user });
-//     } catch (error) {
-//         res.status(500).json({ success: false, message: error.message });
-//     }
-// };
+export const getUserById = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { userId } = req.params;
+        if (!userId) {
+            const message = `user is id not provided`;
+            return ApiResponse.badRequest(res, message);
+        }
+
+        const user = await getUserByIdService(parseInt(userId));
+        if (!user) {
+            return ApiResponse.notFound(res, `User not found with userId: ${userId}`);
+        }
+
+        return ApiResponse.success(res, { data: user });
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
+        res.status(500).json({ success: false, message: errorMessage });
+        return ApiResponse.error(res, { message: errorMessage });
+    }
+};
+
+// Controller to get a user by email
+export const getUserByEmail = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { email } = req.params;
+        if (!email) {
+            const message = `user email is not provided`;
+            return ApiResponse.badRequest(res, message);
+        }
+
+        const user = await getUserByEmailService(email);
+        if (!user) {
+            return ApiResponse.notFound(res, `User not found with email: ${email}`);
+        }
+
+        return ApiResponse.success(res, { data: user });
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
+        res.status(500).json({ success: false, message: errorMessage });
+        return ApiResponse.error(res, { message: errorMessage });
+    }
+};
 
 // Controller to update a user by ID
-// export const updateUser = async (req: Request, res: Response): Promise<void> => {
-//     try {
-//         const updatedUser = await updateUserService(req.params.id, req.body);
-//         if (!updatedUser) {
-//             res.status(404).json({ success: false, message: "User not found" });
-//             return;
-//         }
-//         res.status(200).json({ success: true, data: updatedUser });
-//     } catch (error) {
-//         res.status(500).json({ success: false, message: error.message });
-//     }
-// };
+export const updateUser = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { userId } = req.params;
+        if (!userId) {
+            const message = `user is id not provided`;
+            return ApiResponse.badRequest(res, message);
+        }
+
+        const user = await getUserByIdService(parseInt(userId));
+        if (!user) {
+            return ApiResponse.notFound(res, `User not found with userId: ${userId}`);
+        }
+
+        const { ...userData } = req.body;
+
+        const updatedUser = await updateUserService(parseInt(userId), userData);
+        if (!updatedUser) {
+            return ApiResponse.error(res, { status: 404, message: "User not found" });
+        }
+        return ApiResponse.success(res, { status: 200, data: updatedUser, message: "User updated successfully" });
+        res.status(200).json({ success: true, data: updatedUser });
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
+        return ApiResponse.error(res, { status: 500, message: errorMessage });
+    }
+};
 
 // Controller to delete a user by ID
-// export const deleteUser = async (req: Request, res: Response): Promise<void> => {
-//     try {
-//         const deleted = await deleteUserService(req.params.id);
-//         if (!deleted) {
-//             res.status(404).json({ success: false, message: "User not found" });
-//             return;
-//         }
-//         res.status(200).json({ success: true, message: "User deleted successfully" });
-//     } catch (error) {
-//         res.status(500).json({ success: false, message: error.message });
-//     }
-// };
+// for now just disabling user to true
+export const deleteUser = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { userId } = req.params;
+
+        if (!userId) {
+            const message = `user is id not provided`;
+            return ApiResponse.badRequest(res, message);
+        }
+
+        const user = await getUserByIdService(parseInt(userId));
+        if (!user) {
+            return ApiResponse.notFound(res, `User not found with userId: ${userId}`);
+        }
+
+        const deleted = await deleteUserService(parseInt(userId));
+        if (!deleted) {
+            return ApiResponse.notFound(res, "User not found");
+        }
+
+        return ApiResponse.success(res, { status: 200, message: "User deleted successfully" });
+    } catch (error) {
+        return ApiResponse.error(res, {
+            message: `An unexpected error occurred while deleting the user: ${
+                error instanceof Error ? error.message : "Unknown error"
+            }`,
+        });
+    }
+};
