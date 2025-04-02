@@ -6,8 +6,9 @@ import express, { Request, Response } from "express";
 import endpoints from "express-list-endpoints";
 import chalk from "chalk";
 
-// Import user routes
-import userRoutes from "./modules/user/routes/user.routes";
+import authRouter from "./modules/auth/routes/auth.routes";
+import { authenticate } from "./middleware/auth.middleware";
+import userRouter from "./modules/user/routes/user.routes";
 
 const app = express(); // Create an Express application instance
 
@@ -101,8 +102,11 @@ app.get("/routes", (req, res) => {
     res.status(200).send(endpoints(app));
 });
 
-// Available routes
-app.use("/api/users", userRoutes);
+// Public routes
+app.use("/api/auth", authRouter);
+
+// Protected routes
+app.use("/api/users", authenticate, userRouter);
 
 // **Global Error Handler Registration**
 // Register the custom error handler to manage application errors centrally

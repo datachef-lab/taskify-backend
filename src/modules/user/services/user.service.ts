@@ -7,12 +7,21 @@ import { eq } from "drizzle-orm";
 /**
  * Service to create a new user.
  * Hashes the password before storing it in the database.
+ * Optionally checks if the user already exists.
  * @param userData - The user data to create a new user.
- * @returns The created user without the password field.
+ * @param checkExisting - Whether to check for existing users.
+ * @returns The created user without the password field, or null if the user already exists.
  * @throws Error if the user creation fails.
  */
-export const createUserService = async (userData: UserDto) => {
+export const createUserService = async (userData: UserDto, checkExisting = false) => {
     try {
+        if (checkExisting) {
+            const [existingUser] = await db.select().from(userModel).where(eq(userModel.email, userData.email));
+            if (existingUser) {
+                return null; // User already exists
+            }
+        }
+
         // Hash the password before storing it in the database
         const hashedPassword = await bcrypt.hash(userData.password, 10);
         userData.password = hashedPassword;

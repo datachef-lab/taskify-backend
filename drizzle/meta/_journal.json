@@ -8,6 +8,13 @@
             "when": 1743062070151,
             "tag": "0000_slow_silver_samurai",
             "breakpoints": true
+        },
+        {
+            "idx": 1,
+            "version": "7",
+            "when": 1743595488514,
+            "tag": "0001_white_shatterstar",
+            "breakpoints": true
         }
     ]
 }

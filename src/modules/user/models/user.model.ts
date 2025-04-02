@@ -11,6 +11,7 @@ export const userModel = pgTable("users", {
     profileImage: text(),
     isAdmin: boolean().default(false),
     disabled: boolean().default(false),
+    refreshToken: varchar({ length: 255 }), // Added refreshToken field
     createdAt: timestamp().defaultNow().notNull(),
     updatedAt: timestamp()
         .notNull()
