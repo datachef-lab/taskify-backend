@@ -7,7 +7,7 @@ import endpoints from "express-list-endpoints";
 import chalk from "chalk";
 
 import authRouter from "./modules/auth/routes/auth.routes";
-import { authenticate } from "./middleware/auth.middleware";
+import { authenticate } from "./middlewares/auth.middleware";
 import userRouter from "./modules/user/routes/user.routes";
 
 const app = express(); // Create an Express application instance
