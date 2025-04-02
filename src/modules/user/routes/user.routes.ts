@@ -10,22 +10,46 @@ import {
 
 const userRouter = Router();
 
-// Route to create a new user
+/**
+ * @route POST /api/users
+ * @description Create a new user
+ * @access Public
+ */
 userRouter.post("/", createUser);
 
-// Route to create a new user
+/**
+ * @route GET /api/users
+ * @description Get all users
+ * @access Public
+ */
 userRouter.get("/", getAllUsers);
 
-// Route to get a user by ID
+/**
+ * @route GET /api/users/:userId
+ * @description Get a user by ID
+ * @access Public
+ */
 userRouter.get("/:userId", getUserById);
 
-// Route to get a user by emailId
+/**
+ * @route GET /api/users/email/:email
+ * @description Get a user by email
+ * @access Public
+ */
 userRouter.get("/email/:email", getUserByEmail);
 
-// // Route to update a user by ID
+/**
+ * @route PUT /api/users/:userId
+ * @description Update a user by ID
+ * @access Public
+ */
 userRouter.put("/:userId", updateUser);
 
-// // Route to delete a user by ID
-userRouter.delete("/:id", deleteUser);
+/**
+ * @route DELETE /api/users/:userId
+ * @description Delete (disable) a user by ID
+ * @access Public
+ */
+userRouter.delete("/:userId", deleteUser);
 
 export default userRouter;

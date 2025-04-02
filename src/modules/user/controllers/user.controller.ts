@@ -9,7 +9,13 @@ import {
 } from "../services/user.service";
 import { ApiResponse } from "../../../utils/api-response";
 
-// Controller to create a new user
+/**
+ * Controller to create a new user.
+ * Validates the request body and creates a new user.
+ * @param req - Express request object
+ * @param res - Express response object
+ * @param next - Express next function
+ */
 export const createUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const { name, email, password, phone } = req.body;
@@ -44,7 +50,12 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
     }
 };
 
-// Controller to get all users
+/**
+ * Controller to fetch all users.
+ * @param req - Express request object
+ * @param res - Express response object
+ * @param next - Express next function
+ */
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
     try {
         const users = await findAllUsers();
@@ -55,7 +66,12 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
     }
 };
 
-// Controller to get a user by ID
+/**
+ * Controller to fetch a user by ID.
+ * @param req - Express request object
+ * @param res - Express response object
+ * @param next - Express next function
+ */
 export const getUserById = async (req: Request, res: Response): Promise<void> => {
     try {
         const { userId } = req.params;
@@ -77,7 +93,12 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
     }
 };
 
-// Controller to get a user by email
+/**
+ * Controller to fetch a user by email.
+ * @param req - Express request object
+ * @param res - Express response object
+ * @param next - Express next function
+ */
 export const getUserByEmail = async (req: Request, res: Response): Promise<void> => {
     try {
         const { email } = req.params;
@@ -99,7 +120,12 @@ export const getUserByEmail = async (req: Request, res: Response): Promise<void>
     }
 };
 
-// Controller to update a user by ID
+/**
+ * Controller to update a user by ID.
+ * @param req - Express request object
+ * @param res - Express response object
+ * @param next - Express next function
+ */
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const { userId } = req.params;
@@ -127,8 +153,13 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
     }
 };
 
-// Controller to delete a user by ID
-// for now just disabling user to true
+/**
+ * Controller to delete (disable) a user by ID.
+ * Marks the user as disabled instead of permanently deleting them.
+ * @param req - Express request object
+ * @param res - Express response object
+ * @param next - Express next function
+ */
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const { userId } = req.params;
