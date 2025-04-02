@@ -6,8 +6,12 @@ import { generateAccessToken, generateRefreshToken } from "../../../utils/jwt.ut
 
 /**
  * Controller to handle user sign-in.
- * @param req - Express request object.
- * @param res - Express response object.
+ * Validates the user's credentials, generates access and refresh tokens,
+ * and returns them to the client. The refresh token is stored as an HTTP-only cookie.
+ *
+ * @param req - Express request object containing the user's email and password in the body.
+ * @param res - Express response object used to send the response.
+ * @returns A JSON response with the access token or an error message.
  */
 export const signIn = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -40,8 +44,13 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
 
 /**
  * Controller to handle token refresh.
- * @param req - Express request object.
- * @param res - Express response object.
+ * Validates the refresh token provided in the cookies, generates a new access token,
+ * and returns it to the client. If the refresh token is invalid or missing,
+ * it responds with an appropriate error message.
+ *
+ * @param req - Express request object containing the refresh token in the cookies.
+ * @param res - Express response object used to send the response.
+ * @returns A JSON response with the new access token or an error message.
  */
 export const refreshToken = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -61,8 +70,12 @@ export const refreshToken = async (req: Request, res: Response): Promise<void> =
 
 /**
  * Controller to handle user signup.
- * @param req - Express request object.
- * @param res - Express response object.
+ * Validates the user's input, creates a new user in the database, generates access and refresh tokens,
+ * and returns them to the client. The refresh token is stored as an HTTP-only cookie.
+ *
+ * @param req - Express request object containing the user's details (name, email, password, phone) in the body.
+ * @param res - Express response object used to send the response.
+ * @returns A JSON response with the access token or an error message.
  */
 export const signup = async (req: Request, res: Response): Promise<void> => {
     try {
