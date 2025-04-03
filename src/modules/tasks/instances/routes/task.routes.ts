@@ -1,7 +1,7 @@
 import express from "express";
-import * as TaskController from "../controllers/task.controller";
-import { authenticateJWT } from "../../../middlewares/auth";
-import { logActivityMiddleware } from "../../../utils/activity-logger";
+import * as TaskController from "../../controllers/task.controller";
+import { authenticateJWT } from "../../../../middlewares/auth";
+import { logActivityMiddleware } from "../../../../utils/activity-logger";
 
 const router = express.Router();
 

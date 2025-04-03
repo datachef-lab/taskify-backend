@@ -4,6 +4,13 @@ import { taskTemplateFnTemplateModel } from "./joins.model";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+/**
+ * TaskTemplate Model
+ *
+ * Represents a template for tasks, providing a predefined structure
+ * that tasks can follow. This model stores essential information
+ * about task templates such as name, description, and timestamps.
+ */
 export const taskTemplateModel = pgTable("task_templates", {
     id: serial().primaryKey(),
     name: varchar({ length: 255 }).notNull(),

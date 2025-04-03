@@ -3,17 +3,19 @@
 // import { eq } from "drizzle-orm";
 // import bcrypt from "bcrypt";
 
-// // async function createUser(userData: IUser): Promise < IUser > {
-// //     const salt = await bcrypt.genSalt(10);
-// //     const hashedPassword = await bcrypt.hash(userData.password, salt);
+// import { UserDto } from "../../../types/user.type";
 
-// //     const dbUser = {
-// //         ...userData,
-// //         password: hashedPassword,
-// //     };
-// //     const [user] = await db.insert(users).values(dbUser).returning();
-// //     return user;
-// // }
+// async function createUser(givenUser: UserDto): Promise<UserDto | null> {
+//     // const salt = await bcrypt.genSalt(10);
+//     // const hashedPassword = await bcrypt.hash(userData.password, salt);
+
+//     // const dbUser = {
+//     //     ...userData,
+//     //     password: hashedPassword,
+//     // };
+//     // const [user] = await db.insert(users).values(dbUser).returning();
+//     return null;
+// }
 
 // // async function getAllUsers(): Promise < IUser[] > {
 // //     return await db.select().from(users);

@@ -11,7 +11,7 @@ import userRoutes from "./modules/user/routes/user.routes";
 // Import analytics routes
 import analyticsRoutes from "./modules/analytics/routes/analytics.routes";
 // Import task routes
-import taskRoutes from "./modules/tasks/routes/task.routes";
+import taskRoutes from "./modules/tasks/instances/routes/task.routes";
 // Import performance middleware
 import { trackPerformance } from "./middlewares/performance";
 

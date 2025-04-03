@@ -20,7 +20,7 @@ import { taskInstanceDropdownTemplateModel } from "./joins.model";
 export const taskInstanceModel = pgTable("task_instances", {
     id: serial().primaryKey(),
 
-    // Link to the task template this instance is based on
+    // Link to the task template this instance
     taskTemplateId: integer("task_template_id_fk")
         .references(() => taskTemplateModel.id)
         .notNull(),
