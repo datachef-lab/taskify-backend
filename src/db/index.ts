@@ -4,7 +4,8 @@
  * This file establishes database connections and exports Drizzle ORM instances
  * with the complete schema imported from schema.ts
  */
-
+import dotenv from "dotenv";
+dotenv.config();
 import { drizzle } from "drizzle-orm/node-postgres";
 // import { createConnection } from "mysql2";
 // import { Connection } from "mysql2/typings/mysql/lib/Connection";
