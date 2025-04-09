@@ -9,6 +9,7 @@ import chalk from "chalk";
 import authRouter from "./modules/auth/routes/auth.routes";
 import { authenticate } from "./middlewares/auth.middleware";
 import userRouter from "./modules/user/routes/user.routes";
+import taskTemplateRouter from "./modules/tasks/templates/routes/task.template.route";
 
 const app = express(); // Create an Express application instance
 
@@ -107,6 +108,8 @@ app.use("/api/auth", authRouter);
 
 // Protected routes
 app.use("/api/users", authenticate, userRouter);
+
+app.use("/api/template", taskTemplateRouter);
 
 // **Global Error Handler Registration**
 // Register the custom error handler to manage application errors centrally
